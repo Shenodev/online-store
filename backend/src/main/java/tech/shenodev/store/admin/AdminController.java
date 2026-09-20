@@ -21,9 +21,11 @@ import tech.shenodev.store.security.StorePrincipal;
 public class AdminController {
 
     private final AdminRegistrationService registration;
+    private final AdminInviteService invites;
 
-    public AdminController(AdminRegistrationService registration) {
+    public AdminController(AdminRegistrationService registration, AdminInviteService invites) {
         this.registration = registration;
+        this.invites = invites;
     }
 
     @PostMapping("/register")
@@ -36,16 +38,18 @@ public class AdminController {
 
     @PostMapping("/invite")
     @ResponseStatus(HttpStatus.CREATED)
-    public void invite(
+    public AdminDtos.InviteResponse invite(
             @AuthenticationPrincipal StorePrincipal principal,
             @RequestBody @Valid AdminDtos.InviteRequest body) {
         String storeId = TenantGuard.requireStoreId(principal.storeId());
-        throw new UnsupportedOperationException("Not implemented yet for store " + storeId);
+        return invites.invite(principal.userId(), storeId, body);
     }
 
     @PostMapping("/invite/accept")
+    @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("permitAll()")
-    public void acceptInvite(@RequestBody @Valid AdminDtos.AcceptInviteRequest body) {
-        throw new UnsupportedOperationException("Not implemented yet");
+    public AdminDtos.RegisterResponse acceptInvite(
+            @RequestBody @Valid AdminDtos.AcceptInviteRequest body) {
+        return invites.accept(body.token(), body.password());
     }
 }
