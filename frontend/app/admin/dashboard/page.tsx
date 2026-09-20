@@ -1,7 +1,12 @@
+import { LogoutButton } from "@/components/LogoutButton";
+
 export default function AdminDashboardPage() {
   return (
     <main className="mx-auto max-w-6xl px-6 py-12">
-      <h1 className="font-sora text-3xl font-bold text-white">Dashboard</h1>
+      <div className="flex items-center justify-between gap-4">
+        <h1 className="font-sora text-3xl font-bold text-white">Dashboard</h1>
+        <LogoutButton />
+      </div>
       <p className="mt-2 text-slate-400">
         Store metrics. Served by <code>GET /api/v1/admin/products</code> with
         store_id extracted from JWT.
