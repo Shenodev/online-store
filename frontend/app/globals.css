@@ -8,6 +8,75 @@
   --accent: #06b6d4;
 }
 
-body {
-  background-color: var(--bg-deep);
+/**
+ * Shenostore global aesthetic (Rules.md §2, ui-ux-brief.md):
+ * dark-mode first, FLAT only (no shadows/bevels — separation via
+ * border-slate-700/800), generous negative space, rounded-xl everywhere.
+ */
+@layer base {
+  body {
+    @apply bg-brand-deep font-inter text-slate-50 antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-sora font-semibold text-white;
+  }
+
+  ::selection {
+    background-color: var(--accent);
+    color: #0f172a;
+  }
+}
+
+@layer components {
+  /* Surfaces */
+  .card {
+    @apply rounded-xl border border-slate-700 bg-brand-surface p-6 md:p-8;
+  }
+
+  /* Buttons — flat accent or outlined, never 3D */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 font-inter text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#06B6D4] disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply btn bg-[#06B6D4] text-slate-900 hover:bg-cyan-400;
+  }
+  .btn-secondary {
+    @apply btn border border-slate-700 bg-transparent text-white hover:border-[#06B6D4] hover:text-[#06B6D4];
+  }
+  .btn-ghost {
+    @apply btn px-4 py-2 text-slate-300 hover:text-[#06B6D4];
+  }
+  .btn-sm {
+    @apply px-4 py-2 text-sm;
+  }
+
+  /* Form fields */
+  .input {
+    @apply w-full rounded-xl border border-slate-700 bg-slate-900 px-4 py-2 text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#06B6D4];
+  }
+  .label {
+    @apply mb-1 block font-inter text-sm font-medium text-slate-300;
+  }
+
+  /* Data display */
+  .table-row {
+    @apply border-b border-slate-800 py-4;
+  }
+  .badge {
+    @apply inline-flex items-center rounded-xl border border-slate-700 px-3 py-1 text-xs font-medium text-slate-300;
+  }
+  .badge-accent {
+    @apply badge border-[#06B6D4] text-[#06B6D4];
+  }
+
+  /* Loading skeleton (surface pulse, no layout shift) */
+  .skeleton {
+    @apply animate-pulse rounded-xl bg-slate-800;
+  }
 }

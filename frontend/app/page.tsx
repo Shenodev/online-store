@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Button } from "@/components/Button";
 
 async function getStores() {
   const base = process.env.NEXT_PUBLIC_API_URL ?? "https://api.store.shenodev.tech";
@@ -23,18 +24,10 @@ export default async function Home() {
       </p>
 
       <div className="mt-8 flex gap-4">
-        <Link
-          href="/admin/register"
-          className="rounded-xl bg-cyan-500 px-6 py-3 font-medium text-slate-900 transition-colors duration-200 hover:bg-cyan-400 focus:outline-none focus:ring-2 focus:ring-[#06B6D4]"
-        >
-          Create Store
-        </Link>
-        <Link
-          href="/admin/dashboard"
-          className="rounded-xl border border-slate-700 px-6 py-3 font-medium text-white transition-colors duration-200 hover:border-cyan-500 focus:outline-none focus:ring-2 focus:ring-[#06B6D4]"
-        >
+        <Button href="/admin/register">Create Store</Button>
+        <Button href="/admin/dashboard" variant="secondary">
           Admin Dashboard
-        </Link>
+        </Button>
       </div>
 
       <section className="mt-12">

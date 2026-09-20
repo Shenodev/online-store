@@ -19,6 +19,7 @@ export const metadata: Metadata = {
   description: "Multi-tenant e-commerce SaaS platform",
   icons: {
     icon: "/favicon.ico",
+    apple: "/logo-icon.png",
   },
 };
 
