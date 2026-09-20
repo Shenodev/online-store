@@ -1,0 +1,13 @@
+{
+  "name": "shenostore",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "frontend"
+  ],
+  "scripts": {
+    "dev:frontend": "npm run dev --workspace=shenostore-frontend",
+    "build:frontend": "npm run build --workspace=shenostore-frontend",
+    "lint:frontend": "npm run lint --workspace=shenostore-frontend"
+  }
+}

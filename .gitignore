@@ -1,0 +1,25 @@
+# root
+node_modules/
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+backend/target/
+.vercel/
+
+# env / secrets — never commit real credentials
+.env
+.env*.local
+frontend/.env
+backend/.env
+*.pem
+*.jks
+
+# os / ide
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.iml/
+
+# logs
+npm-debug.log*

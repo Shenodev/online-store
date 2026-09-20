@@ -1,0 +1,12 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "project": {
+    "name": "shenostore",
+    "type": "monorepo"
+  },
+  "workspace": {
+    "root": ".",
+    "packages": ["frontend", "backend"],
+    "tracked": true
+  }
+}
