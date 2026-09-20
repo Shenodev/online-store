@@ -7,13 +7,30 @@ import jakarta.validation.constraints.Size;
 public class AdminDtos {
 
     public record RegisterRequest(
-            @NotBlank String storeName,
-            @Email @NotBlank String email,
-            @Size(min = 8) String password) {}
+            @NotBlank(message = "Store name is required")
+            @Size(min = 2, max = 255, message = "Store name must be 2-255 characters")
+            String storeName,
 
-    public record InviteRequest(@Email @NotBlank String email) {}
+            @NotBlank(message = "Email is required")
+            @Email(message = "Valid email required")
+            @Size(max = 255)
+            String email,
+
+            @NotBlank(message = "Password is required")
+            @Size(min = 8, max = 128, message = "Password must be 8-128 characters")
+            String password) {}
+
+    public record RegisterResponse(String token, String storeId, String adminId) {}
+
+    public record InviteRequest(
+            @NotBlank(message = "Email is required")
+            @Email(message = "Valid email required")
+            @Size(max = 255)
+            String email) {}
 
     public record AcceptInviteRequest(
-            @NotBlank String token,
-            @Size(min = 8) String password) {}
+            @NotBlank(message = "Token is required") String token,
+            @NotBlank(message = "Password is required")
+            @Size(min = 8, max = 128, message = "Password must be 8-128 characters")
+            String password) {}
 }

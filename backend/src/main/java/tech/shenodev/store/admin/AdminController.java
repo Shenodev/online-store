@@ -1,5 +1,6 @@
 package tech.shenodev.store.admin;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,27 +20,32 @@ import tech.shenodev.store.security.StorePrincipal;
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
 
-    // Service wiring intentionally left to the service layer task.
+    private final AdminRegistrationService registration;
+
+    public AdminController(AdminRegistrationService registration) {
+        this.registration = registration;
+    }
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("permitAll()")
-    public void register(@RequestBody @Validated AdminDtos.RegisterRequest body) {
-        throw new UnsupportedOperationException("Not implemented yet");
+    public AdminDtos.RegisterResponse register(
+            @RequestBody @Valid AdminDtos.RegisterRequest body) {
+        return registration.register(body);
     }
 
     @PostMapping("/invite")
     @ResponseStatus(HttpStatus.CREATED)
     public void invite(
             @AuthenticationPrincipal StorePrincipal principal,
-            @RequestBody @Validated AdminDtos.InviteRequest body) {
+            @RequestBody @Valid AdminDtos.InviteRequest body) {
         String storeId = TenantGuard.requireStoreId(principal.storeId());
         throw new UnsupportedOperationException("Not implemented yet for store " + storeId);
     }
 
     @PostMapping("/invite/accept")
     @PreAuthorize("permitAll()")
-    public void acceptInvite(@RequestBody @Validated AdminDtos.AcceptInviteRequest body) {
+    public void acceptInvite(@RequestBody @Valid AdminDtos.AcceptInviteRequest body) {
         throw new UnsupportedOperationException("Not implemented yet");
     }
 }
