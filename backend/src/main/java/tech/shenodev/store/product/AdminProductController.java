@@ -1,11 +1,6 @@
 package tech.shenodev.store.product;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,13 +9,12 @@ import org.springframework.web.bind.annotation.*;
 import tech.shenodev.store.common.TenantGuard;
 import tech.shenodev.store.security.StorePrincipal;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * Tenant-isolated product CRUD. Every handler resolves {@code storeId} from
- * the JWT principal and qualifies the repository call — the tenant never
- * comes from the request body.
+ * Tenant-isolated product CRUD at {@code /api/v1/admin/products}.
+ * The {@code storeId} is resolved from the JWT principal on every request —
+ * it never comes from the request body, path, or query string.
  */
 @RestController
 @RequestMapping("/api/v1/admin/products")
@@ -28,37 +22,39 @@ import java.util.List;
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminProductController {
 
-    public record CreateProductRequest(
-            @NotBlank @Size(max = 255) String title,
-            String description,
-            @NotNull @DecimalMin("0.00") BigDecimal price,
-            @Min(0) int stockQuantity,
-            @Size(max = 255) String imageUrl) {}
+    private final ProductService service;
 
-    // Service wiring intentionally left to the service layer task.
+    public AdminProductController(ProductService service) {
+        this.service = service;
+    }
 
     @GetMapping
-    public List<?> list(@AuthenticationPrincipal StorePrincipal principal) {
-        String storeId = TenantGuard.requireStoreId(principal.storeId());
-        throw new UnsupportedOperationException("Not implemented yet for store " + storeId);
+    public List<ProductDtos.ProductResponse> list(
+            @AuthenticationPrincipal StorePrincipal principal) {
+        return service.list(TenantGuard.requireStoreId(principal.storeId()));
+    }
+
+    @GetMapping("/{id}")
+    public ProductDtos.ProductResponse get(
+            @AuthenticationPrincipal StorePrincipal principal,
+            @PathVariable String id) {
+        return service.get(TenantGuard.requireStoreId(principal.storeId()), id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(
+    public ProductDtos.ProductResponse create(
             @AuthenticationPrincipal StorePrincipal principal,
-            @RequestBody @Valid CreateProductRequest body) {
-        TenantGuard.requireStoreId(principal.storeId());
-        throw new UnsupportedOperationException("Not implemented yet");
+            @RequestBody @Valid ProductDtos.UpsertProductRequest body) {
+        return service.create(TenantGuard.requireStoreId(principal.storeId()), body);
     }
 
     @PutMapping("/{id}")
-    public void update(
+    public ProductDtos.ProductResponse update(
             @AuthenticationPrincipal StorePrincipal principal,
             @PathVariable String id,
-            @RequestBody @Valid CreateProductRequest body) {
-        TenantGuard.requireStoreId(principal.storeId());
-        throw new UnsupportedOperationException("Not implemented yet");
+            @RequestBody @Valid ProductDtos.UpsertProductRequest body) {
+        return service.update(TenantGuard.requireStoreId(principal.storeId()), id, body);
     }
 
     @DeleteMapping("/{id}")
@@ -66,7 +62,6 @@ public class AdminProductController {
     public void delete(
             @AuthenticationPrincipal StorePrincipal principal,
             @PathVariable String id) {
-        TenantGuard.requireStoreId(principal.storeId());
-        throw new UnsupportedOperationException("Not implemented yet");
+        service.delete(TenantGuard.requireStoreId(principal.storeId()), id);
     }
 }
