@@ -1,32 +1,50 @@
+import { Navbar } from "@/components/Navbar";
 import { ProductCard } from "@/components/ProductCard";
-import { api } from "@/lib/api";
+import { StoreSearch } from "@/components/StoreSearch";
+import { getStoreProducts } from "@/lib/storefront";
 
 export default async function StorePage({
   params,
+  searchParams,
 }: {
   params: { storeId: string };
+  searchParams: { q?: string };
 }) {
-  let products: { id: string; title: string; price: number }[] = [];
-  try {
-    products = await api(`/api/v1/store/${params.storeId}/products`);
-  } catch {
-    products = [];
-  }
+  const { products, total } = await getStoreProducts(params.storeId, {
+    q: searchParams.q,
+  });
 
   return (
-    <main className="mx-auto max-w-6xl px-6 py-12">
-      <h1 className="font-sora text-3xl font-bold text-white">Store</h1>
-      <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
+    <>
+      <Navbar />
+      <main className="mx-auto max-w-6xl px-6 py-12">
+        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h1 className="font-sora text-3xl font-bold md:text-4xl">Store</h1>
+            <p className="mt-2 text-slate-400">
+              {total === 0
+                ? "No products in this catalog yet."
+                : `${total} product${total === 1 ? "" : "s"}`}
+              {searchParams.q ? ` matching “${searchParams.q}”` : ""}
+            </p>
+          </div>
+          <StoreSearch storeId={params.storeId} />
+        </div>
+
         {products.length === 0 ? (
-          <div className="rounded-xl border border-slate-700 bg-slate-800 p-8 text-slate-400">
-            Catalog scaffold for store {params.storeId}.
+          <div className="card mt-8 text-slate-400">
+            {searchParams.q
+              ? "Nothing matches your search in this store."
+              : "This store has not listed any products yet."}
           </div>
         ) : (
-          products.map((p) => (
-            <ProductCard key={p.id} storeId={params.storeId} product={p} />
-          ))
+          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {products.map((p) => (
+              <ProductCard key={p.id} storeId={params.storeId} product={p} />
+            ))}
+          </div>
         )}
-      </div>
-    </main>
+      </main>
+    </>
   );
 }
