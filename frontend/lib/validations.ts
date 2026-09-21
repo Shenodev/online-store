@@ -16,10 +16,11 @@ export const inviteMemberSchema = z.object({
 });
 
 export const productSchema = z.object({
-  title: z.string().min(2),
-  description: z.string().optional(),
-  price: z.number().positive(),
-  stockQuantity: z.number().int().min(0),
+  title: z.string().min(2, "Title is required").max(255),
+  description: z.string().max(5000).optional().or(z.literal("")),
+  price: z.coerce.number().positive("Price must be positive"),
+  stockQuantity: z.coerce.number().int().min(0, "Stock must be >= 0"),
+  imageUrl: z.string().max(255).optional().or(z.literal("")),
 });
 
 export type RegisterStoreInput = z.infer<typeof registerStoreSchema>;

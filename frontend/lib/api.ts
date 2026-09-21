@@ -40,5 +40,8 @@ export async function adminApi<T>(path: string, opts: RequestInit = {}): Promise
     const body = await res.json().catch(() => ({ error: res.statusText }));
     throw new Error(body.error ?? `API error ${res.status}`);
   }
+  if (res.status === 204) {
+    return undefined as T;
+  }
   return (await res.json()) as T;
 }
