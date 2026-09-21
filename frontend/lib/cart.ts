@@ -13,6 +13,7 @@ export type CartItem = {
 type CartState = {
   items: CartItem[];
   addItem: (item: CartItem) => void;
+  setQuantity: (productId: string, quantity: number) => void;
   removeItem: (productId: string) => void;
   clear: () => void;
 };
@@ -43,6 +44,15 @@ export function createCartStore(storeId: string) {
         removeItem: (productId) =>
           set((s) => ({
             items: s.items.filter((i) => i.productId !== productId),
+          })),
+        setQuantity: (productId, quantity) =>
+          set((s) => ({
+            items:
+              quantity <= 0
+                ? s.items.filter((i) => i.productId !== productId)
+                : s.items.map((i) =>
+                    i.productId === productId ? { ...i, quantity } : i
+                  ),
           })),
         clear: () => set({ items: [] }),
       }),

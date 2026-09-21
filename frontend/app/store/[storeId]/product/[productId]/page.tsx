@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AddToCartButton } from "@/components/AddToCartButton";
-import { Navbar } from "@/components/Navbar";
 import { getStoreProduct } from "@/lib/storefront";
 
 export default async function ProductDetailPage({
@@ -15,9 +14,7 @@ export default async function ProductDetailPage({
   }
 
   return (
-    <>
-      <Navbar />
-      <main className="mx-auto max-w-6xl px-6 py-12">
+    <main className="mx-auto max-w-6xl px-6 py-12">
         <Link
           href={`/store/${params.storeId}`}
           className="text-sm text-slate-400 transition-colors duration-200 hover:text-[#06B6D4]"
@@ -66,6 +63,5 @@ export default async function ProductDetailPage({
           </div>
         </div>
       </main>
-    </>
   );
 }

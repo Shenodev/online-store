@@ -1,12 +1,14 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { createCartStore } from "@/lib/cart";
+import { useState } from "react";
+import { getCartStore } from "@/lib/cart-registry";
 import type { StorefrontProduct } from "@/lib/storefront";
+import { useCartUI } from "./CartUIProvider";
 
 /**
- * Store-scoped add-to-cart. Writes into the `cart_store_<storeId>`
- * persisted bucket so carts never mix across tenants.
+ * Store-scoped add-to-cart. Writes into the shared `cart_store_<storeId>`
+ * bucket (never mixed across tenants) and opens the drawer on success.
+ * Outside a CartUIProvider the drawer call is a safe no-op.
  */
 export function AddToCartButton({
   storeId,
@@ -15,13 +17,12 @@ export function AddToCartButton({
   storeId: string;
   product: StorefrontProduct;
 }) {
-  const useCart = useMemo(() => createCartStore(storeId), [storeId]);
-  const addItem = useCart((s) => s.addItem);
+  const { openCart } = useCartUI();
   const [added, setAdded] = useState(false);
   const soldOut = product.stockQuantity === 0;
 
   function onAdd() {
-    addItem({
+    getCartStore(storeId).getState().addItem({
       productId: product.id,
       title: product.title,
       price: product.price,
@@ -29,6 +30,7 @@ export function AddToCartButton({
     });
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
+    openCart(storeId);
   }
 
   return (

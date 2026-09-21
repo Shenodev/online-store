@@ -1,4 +1,3 @@
-import { Navbar } from "@/components/Navbar";
 import { ProductCard } from "@/components/ProductCard";
 import { StoreSearch } from "@/components/StoreSearch";
 import { getStoreProducts } from "@/lib/storefront";
@@ -15,9 +14,7 @@ export default async function StorePage({
   });
 
   return (
-    <>
-      <Navbar />
-      <main className="mx-auto max-w-6xl px-6 py-12">
+    <main className="mx-auto max-w-6xl px-6 py-12">
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div>
             <h1 className="font-sora text-3xl font-bold md:text-4xl">Store</h1>
@@ -45,6 +42,5 @@ export default async function StorePage({
           </div>
         )}
       </main>
-    </>
   );
 }
