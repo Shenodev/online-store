@@ -11,6 +11,10 @@ export const adminLoginSchema = z.object({
   password: z.string().min(1, "Password is required").max(128),
 });
 
+export const inviteMemberSchema = z.object({
+  email: z.string().email("Valid email required").max(255),
+});
+
 export const productSchema = z.object({
   title: z.string().min(2),
   description: z.string().optional(),
@@ -20,4 +24,5 @@ export const productSchema = z.object({
 
 export type RegisterStoreInput = z.infer<typeof registerStoreSchema>;
 export type AdminLoginInput = z.infer<typeof adminLoginSchema>;
+export type InviteMemberInput = z.infer<typeof inviteMemberSchema>;
 export type ProductInput = z.infer<typeof productSchema>;
